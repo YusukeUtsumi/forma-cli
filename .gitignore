@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Generated apps
+generated_app/
+
+# Virtual env
+venv/
+.env
+
+models/
+.qwen2.5-coder-3b-instruct-q4_k_m.gguf
+*.gguf
