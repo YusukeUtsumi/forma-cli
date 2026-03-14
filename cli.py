@@ -9,6 +9,8 @@ from domain.domain_model import DomainModel
 from generator.er_generator import generate_er
 from generator.project_generator import generate_project
 
+from generator.react_generator import generate_frontend_project
+
 
 def run(text):
 
@@ -34,6 +36,8 @@ def run(text):
     print(er)
 
     generate_project(domain)
+
+    generate_frontend_project(domain)
 
     print("\nProject generated in generated_app\n")
 
