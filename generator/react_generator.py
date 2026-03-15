@@ -239,16 +239,15 @@ def generate_entity_page(entity, pages_dir):
 
     content = f"""import React, {{ useEffect, useState }} from "react"
 import DataTable from "../components/DataTable"
-import {{ get{cname}s }} from "../api/{name}"
+import {{ get{cname}s, create{cname} }} from "../api/{name}"
 
 function {cname}Page() {{
 
-    const [data, setData] = useState<any[]>([])
+    const [data, setData] = useState<any[] | null>(null)
+    const [form, setForm] = useState<any>({{}})
 
     useEffect(() => {{
-
         load()
-
     }}, [])
 
     async function load() {{
@@ -259,21 +258,62 @@ function {cname}Page() {{
 
     }}
 
-    if (data.length === 0) {{
+    async function submit() {{
+        
+        console.log("submit", form)
+        await create{cname}(form)
+
+        setForm({{}})
+
+        load()
+
+    }}
+
+    function updateField(key: string, value: any) {{
+
+        setForm({{
+            ...form,
+            [key]: value
+        }})
+
+    }}
+
+    if (data === null) {{
 
         return <p>Loading...</p>
 
     }}
 
-    const columns = Object.keys(data[0])
+    const columns = ["id","name","email"]
 
     return (
 
         <div style={{{{ padding: 40 }}}}>
 
+            <h2>Create {cname}</h2>
+
+            {{columns.filter(c => c !== "id").map(col => (
+
+                <div key={{col}}>
+
+                    <label>{{col}}</label>
+
+                    <input
+                        value={{form[col] || ""}}
+                        onChange={{e => updateField(col, e.target.value)}}
+                    />
+
+                </div>
+
+            ))}}
+
+            <button onClick={{() => submit()}}>Create</button>
+
+            <hr/>
+
             <h2>{cname}s</h2>
 
-            <DataTable columns={{columns}} data={{data}} />
+            <DataTable columns={{columns}} data={{data || []}} />
 
         </div>
 
