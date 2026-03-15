@@ -1,28 +1,25 @@
-def generate_main(domain):
+def generate_main(domain_model):
 
-    imports = []
-    includes = []
+    router_imports = ""
+    router_includes = ""
 
-    for entity in domain.entities.values():
+    for entity in domain_model.entities:
 
-        name = entity.name.lower()
+        name = entity.lower()
 
-        imports.append(
-            f"from routers.{name}s import router as {name}s_router"
-        )
-
-        includes.append(
-            f"app.include_router({name}s_router)"
-        )
-
-    imports_code = "\n".join(imports)
-    includes_code = "\n".join(includes)
+        router_imports += f"from routers import {name}s\n"
+        router_includes += f"app.include_router({name}s.router)\n"
 
     return f"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-{imports_code}
+from database import engine
+from database import Base
+
+from models import *
+
+{router_imports}
 
 app = FastAPI()
 
@@ -34,5 +31,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-{includes_code}
+# ------------------------
+# CREATE TABLES
+# ------------------------
+
+Base.metadata.create_all(bind=engine)
+
+# ------------------------
+# ROUTERS
+# ------------------------
+
+{router_includes}
 """
