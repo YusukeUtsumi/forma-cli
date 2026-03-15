@@ -228,6 +228,10 @@ UI
 
 will become fully synchronized.
 
+# License
+
+[MIT License](LICENSE)
+
 
 # Forma（日本語）
 
@@ -468,3 +472,7 @@ API
 UI  
 
 がすべて同期されるようになります。
+
+# License
+
+[MIT License](LICENSE)
